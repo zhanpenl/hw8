@@ -7,12 +7,14 @@
 template <class KeyType, class ValueType>
 class SplayTree : public BinarySearchTree<KeyType, ValueType> {
 public:
-	Node<KeyType, ValueType>* get(const KeyType& k) {
+	// return type
+	ValueType get(const KeyType& k) {
 		Node<KeyType, ValueType>* x = find(k);
-		std::cout << "get: key = " << x->getKey() << std::endl; 
+		if ( !x ) return 0; 
+		// std::cout << "get: key = " << x->getKey() << std::endl;
 		splay(x);
-		if ( x->getKey() == k ) return x;
-		else return NULL;
+		if ( x->getKey() == k ) return x->getValue();
+		else return 0;
 	}
 
 	void insert(const KeyType& k, const ValueType& v) {
@@ -62,6 +64,10 @@ public:
 		}
 		delete(x);
 		splay(p);
+	}
+
+	void report(std::ostream& output) {
+		printRoot(this->root, output);
 	}
 
 private:
@@ -228,6 +234,14 @@ private:
 
 		x->setLeft(p);
 		p->setParent(x);
+	}
+
+	void printRoot(Node<KeyType, ValueType>* root, std::ostream& output) {
+		if ( !root ) return;
+
+		if ( root->getLeft() ) printRoot(root->getLeft(), output);
+		output << root->getKey() << " " << root->getValue() << std::endl;
+		if ( root->getRight() ) printRoot(root->getRight(), output);
 	}
 };
 

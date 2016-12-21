@@ -1,40 +1,37 @@
-#include "SplayTree.h"
-#include <ctime>
+#include "STMap.h"
 #include <iostream>
+#include <ctime>
+#include <fstream>
 
 using namespace std;
 
-int main(int argc, char const *argv[])
-{
-	SplayTree<int, int> st;
-	int count = 1000;
-	/*st.insert(1,0);
-	st.print();
-	st.insert(2,0);
-	st.print();*/
+int main(int argc, char** argv) {
 
-	cout << "inserting nodes..." << endl;
-	for (int i = 0; i < count; ++i)
-	{
-		st.insert(i,0);
-		st.print();
-		cout << endl;
+	char* filename = argv[2];
+	cout << "filename: " << filename << endl;
+	ifstream ifs (filename, ifstream::in);
+	if ( !ifs ) {
+		cerr << "error: open file" << endl;
+		return -1;
 	}
 
-	cout << endl << "getting nodes..." << endl;
-	for (int i = 0; i < count; i++) {
-		st.get(i);
-		st.print();
-	}
+    clock_t start;
+    double duration;
 
-	cout << endl << "removing nodes..." << endl;
+    start = clock();
 
-	for (int i = 0; i < count; ++i)
-	{
-		st.remove(i);
-		st.print();
-		cout << endl;
-	}
+    /* Your algorithm here */
+    STMap stmap;
+    string word;
+    while ( ifs >> word ) {
+    	stmap.add(word);
+    	cout << word << " ";
+    }
+    cout << endl;
 
-	return 0;
+    duration = ( clock() - start ) / (double) CLOCKS_PER_SEC;
+
+    std::cout << duration << "s" << endl << "reporting..." << endl;
+
+    stmap.reportAll(cout);
 }
