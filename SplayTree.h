@@ -53,8 +53,12 @@ public:
 		else { // swap x and s, splay x's new parent
 			swap(s, x);
 			p = x->getParent();
-			if ( p->getLeft() == x ) p->setLeft(NULL);
-			else p->setRight(NULL); 
+			// if the successor is not a leaf node, it has only a child, 
+			// which should be linked to x
+			Node<KeyType, ValueType>* c = x->getLeft() ? x->getLeft() : x->getRight();
+			if ( p->getLeft() == x ) p->setLeft(c);
+			else p->setRight(c);
+			if ( c ) c->setParent(p);
 		}
 		delete(x);
 		splay(p);
@@ -106,7 +110,7 @@ private:
         return node;
     }
 
-    /* precondition: x should be the leaf node */
+    /* precondition: x should be deeper than y in the tree */
     void swap(Node<KeyType, ValueType>* x, Node<KeyType, ValueType>* y) {
     	Node<KeyType, ValueType>* px = x->getParent();
     	Node<KeyType, ValueType>* py = y->getParent();
@@ -128,10 +132,16 @@ private:
     	// swap children
     	Node<KeyType, ValueType>* lx = x->getLeft();
     	Node<KeyType, ValueType>* rx = x->getRight();
-    	x->setLeft(y->getLeft());
-    	x->setRight(y->getRight());
+    	Node<KeyType, ValueType>* ly = y->getLeft();
+    	Node<KeyType, ValueType>* ry = y->getRight();
+    	x->setLeft(ly);
+    	if ( ly ) ly->setParent(x);
+    	x->setRight(ry);
+    	if ( ry ) ry->setParent(x);
     	y->setLeft(lx);
+    	if ( lx ) lx->setParent(y);
     	y->setRight(rx);
+    	if ( rx ) rx->setParent(y);
     }
 
 	void splay(Node<KeyType, ValueType>* x) {

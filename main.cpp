@@ -7,7 +7,7 @@ using namespace std;
 int main(int argc, char const *argv[])
 {
 	SplayTree<int, int> st;
-	int count = 3;
+	int count = 1000;
 	/*st.insert(1,0);
 	st.print();
 	st.insert(2,0);
